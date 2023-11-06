@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,14 +27,16 @@ public class Ejercicios_UT2 {
 
         var lista = new ArrayList<A>();
         var m = new Ejercicios_UT2();
-        //lista.add(m.generarA("Pepe", 2, 7, 9, 12));
-        //lista.add(m.generarA("Juan", 0, 1, 5, 10));
-        //lista.add(m.generarA("Pablo Garcia", 4, 9, 0, 1));
-        //lista.add(m.generarA("Vacio", 0, 1, 0, 1));
+        lista.add(m.generarA("Pepe", 2, 7, 9, 12));
+        lista.add(m.generarA("Juan", 0, 1, 5, 10));
+        lista.add(m.generarA("Pablo Garcia", 4, 9, 0, 1));
+        lista.add(m.generarA("Vacio", 0, 1, 0, 1));
         //Descomentar para ver tamaño de fichero texto y fichero binario
         //lista.add(m.generarA("Enorme", 100000, 200000, 100000, 200000));
-        //m.EscribirTxt(lista);
+        // m.EscribirTxt(lista);
         m.LeerTxt();
+        // m.EscribirTxtBinario(lista);
+        m.LeerTxtBinario();
 
     }
 
@@ -46,7 +49,7 @@ public class Ejercicios_UT2 {
             archivo = new File("A.txt");
             fr = new FileReader(archivo);
             br = new BufferedReader(fr);
-          
+
             String linea;
             while ((linea = br.readLine()) != null) {
                 A miA = new A(linea);
@@ -94,24 +97,20 @@ public class Ejercicios_UT2 {
         try {
             archivo = new FileInputStream("A_Binario.txt");
             leer = new DataInputStream(archivo);
-
-            String linea;
-            while ((linea = leer.readUTF()) != null) {
-
+            while (leer.available() > 0) {
+             
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         } finally {
             try {
-                if (null != leer) {
-                    leer.close();
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
+                leer.close();
+            } catch (Exception e) {
+                System.out.println("Error 2");
             }
-        }
 
+        }
     }
 
     private void EscribirTxtBinario(ArrayList<A> lista) {
@@ -122,10 +121,17 @@ public class Ejercicios_UT2 {
             escritor = new DataOutputStream(archivo);
 
             for (int i = 0; i < lista.size(); i++) {
-
+                escritor.writeUTF(lista.get(i).getNombre());
+                for (int j = 0; j < lista.get(i).getB().size(); j++) {
+                    escritor.writeInt(lista.get(i).getB().get(j));
+                }
+                for (int j = 0; j < lista.get(i).getC().size(); j++) {
+                    escritor.writeInt(lista.get(i).getC().get(j));
+                }
             }
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
